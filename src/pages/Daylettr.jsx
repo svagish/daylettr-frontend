@@ -6,7 +6,7 @@ import { FeaturedNote } from "../components/FeaturedNote"
 import {
     getTodaysNote,
     postNote,
-    isVisitorOnCooldown,
+    cooldownStatus,
 } from "../api/messageService"
 import { useVisitor } from "../hooks/useVisitor"
 import { useState, useEffect } from "react"
@@ -27,13 +27,15 @@ export const DaylettrPage = () => {
     const [loading, setLoading] = useState(false)
     const [previousView, setPreviousView] = useState("")
     const [collection, setCollection] = useState([])
+    const [lastPostedAt, setLastPostedAt] = useState(null)
     const toggleTheme = () => setDarkMode(!darkMode)
 
     useEffect(() => {
         async function checkInitialStatus() {
             try {
-                const status = await isVisitorOnCooldown()
-                setView(status ? "cooldown" : "landing")
+                const status = await cooldownStatus()
+                setLastPostedAt(status.lastPostedAt)
+                setView(status.onCooldown ? "cooldown" : "landing")
             } catch (err) {
                 setView("landing")
             }
@@ -157,7 +159,7 @@ export const DaylettrPage = () => {
 
                                 {view === "cooldown" && (
                                     <PageTransition key="cooldown">
-                                        <Cooldown onYesterday={goToYesterday} />
+                                        <Cooldown onYesterday={goToYesterday} lastPostedAt={lastPostedAt}/>
                                     </PageTransition>
                                 )}
                             </main>

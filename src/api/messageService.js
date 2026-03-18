@@ -20,7 +20,7 @@ export const postNote = async (content, previousNoteId, rating) => {
   return response.data;
 };
 
-export const isVisitorOnCooldown = async () => {
+export const cooldownStatus = async () => {
   const response = await api.get("/visitor/status");
-  return response.data.onCooldown;
+  return response.data;
 };
