@@ -9,6 +9,7 @@ import {
     cooldownStatus,
 } from "../api/messageService"
 import { useVisitor } from "../hooks/useVisitor"
+import { useTheme } from "../hooks/useTheme"
 import { useState, useEffect } from "react"
 import { Cooldown } from "./Cooldown"
 import { RevealNote } from "./RevealNote"
@@ -19,7 +20,7 @@ import { PageTransition } from "../components/PageTransition"
 
 export const DaylettrPage = () => {
     const visitorId = useVisitor()
-    const [darkMode, setDarkMode] = useState(false)
+    const { isDark, toggleTheme } = useTheme()
     const [view, setView] = useState("") // "" | "landing" | "reading" | "writing" | "cooldown" | "yesterday"
     const [note, setNote] = useState(null)
     const [rating, setRating] = useState(50)
@@ -28,7 +29,6 @@ export const DaylettrPage = () => {
     const [previousView, setPreviousView] = useState("")
     const [collection, setCollection] = useState([])
     const [lastPostedAt, setLastPostedAt] = useState(null)
-    const toggleTheme = () => setDarkMode(!darkMode)
 
     useEffect(() => {
         async function checkInitialStatus() {
@@ -85,8 +85,7 @@ export const DaylettrPage = () => {
     }
 
     return (
-        <div className={darkMode ? "dark" : ""}>
-            <div className="min-h-screen bg-white dark:bg-gray-950 text-black dark:text-white transition-colors duration-300">
+        <div className="min-h-screen bg-white dark:bg-gray-950 text-black dark:text-white transition-colors duration-300">
                 {view === "yesterday" ? (
                     <AnimatePresence mode="wait">
                         <PageTransition key="yesterday">
@@ -120,7 +119,7 @@ export const DaylettrPage = () => {
                                                 loading={loading}
                                             />
                                             <ThemeToggle
-                                                darkMode={darkMode}
+                                                darkMode={isDark}
                                                 onToggle={toggleTheme}
                                             />
                                             <FeaturedNote
@@ -140,7 +139,7 @@ export const DaylettrPage = () => {
                                     <PageTransition key="reading">
                                         <RevealNote
                                             note={note}
-                                            darkMode={darkMode}
+                                            darkMode={isDark}
                                             onToggleTheme={toggleTheme}
                                             onWrite={() => setView("writing")}
                                             onRate={setRating}
@@ -167,6 +166,5 @@ export const DaylettrPage = () => {
                     </>
                 )}
             </div>
-        </div>
     )
 }

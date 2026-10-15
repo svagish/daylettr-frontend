@@ -15,7 +15,11 @@ export const RevealNote = ({
             <RevealedNote note={note} />
             <NoteActions onShare={() => {}} />
             <MotivationSlider onRate={onRate} />{" "}
-            <WriteNoteFooter onWrite={onWrite} darkMode={darkMode} />
+            <WriteNoteFooter
+                onWrite={onWrite}
+                darkMode={darkMode}
+                onToggleTheme={onToggleTheme}
+            />
         </div>
     )
 }

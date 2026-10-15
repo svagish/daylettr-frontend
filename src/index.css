@@ -1,4 +1,2 @@
 @import "tailwindcss";
-main {
-  outline: 1px #2f4f90 !important;
-}
+@custom-variant dark (&:where(.dark, .dark *));
