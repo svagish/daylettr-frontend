@@ -122,7 +122,8 @@ export const DaylettrPage = () => {
 
     return (
         <div className="min-h-screen bg-white dark:bg-gray-950 text-black dark:text-white transition-colors duration-300">
-                {view === "yesterday" || view === "collection" ? (
+            <Header onOpenCollection={goToCollection} />
+            {view === "yesterday" || view === "collection" ? (
                     <AnimatePresence mode="wait">
                         {view === "yesterday" ? (
                             <PageTransition key="yesterday">
@@ -144,7 +145,6 @@ export const DaylettrPage = () => {
                     </AnimatePresence>
                 ) : (
                     <>
-                        <Header onOpenCollection={goToCollection} />
                         <AnimatePresence mode="wait">
                             <main className="flex flex-col items-center px-4">
                                 {view === "" && (

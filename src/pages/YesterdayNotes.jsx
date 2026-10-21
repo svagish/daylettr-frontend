@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { Header } from "../components/Header"
 import { NoteCard } from "../components/NoteCard"
 import { getYesterdayNotes } from "../api/messageService"
 export const YesterdayNotes = ({ onBack }) => {
@@ -24,9 +23,7 @@ export const YesterdayNotes = ({ onBack }) => {
     }, [])
 
     return (
-        <div className="min-h-screen bg-white dark:bg-gray-950 text-black dark:text-white transition-colors duration-300">
-            <Header />
-            <main className="px-8 py-4 max-w-6xl mx-auto">
+        <main className="px-8 py-4 max-w-6xl mx-auto">
                 {/* TOP ROW */}
                 <div className="flex justify-between items-center mb-8">
                     <button
@@ -67,7 +64,6 @@ export const YesterdayNotes = ({ onBack }) => {
                         No notes from yesterday yet.
                     </p>
                 )}
-            </main>
-        </div>
+        </main>
     )
 }

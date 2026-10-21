@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { Header } from "../components/Header"
 import { NoteCard } from "../components/NoteCard"
 import { getCollection, removeFromCollection } from "../api/collectionService"
 
@@ -17,6 +16,7 @@ export const CollectionNotes = ({ onBack }) => {
                 setTotal(data.totalCollected)
             } catch (err) {
                 console.error(err)
+                setError("Failed to load your collection.")
             } finally {
                 setLoading(false)
             }
@@ -45,9 +45,7 @@ export const CollectionNotes = ({ onBack }) => {
     }
 
     return (
-        <div className="min-h-screen bg-white dark:bg-gray-950 text-black dark:text-white transition-colors duration-300">
-            <Header />
-            <main className="px-8 py-4 max-w-6xl mx-auto">
+        <main className="px-8 py-4 max-w-6xl mx-auto">
                 {/* TOP ROW */}
                 <div className="flex justify-between items-center mb-8">
                     <button
@@ -101,7 +99,6 @@ export const CollectionNotes = ({ onBack }) => {
                         No notes in your collection yet.
                     </p>
                 )}
-            </main>
-        </div>
+        </main>
     )
 }

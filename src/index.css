@@ -1,2 +1,9 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Reserve the scrollbar gutter permanently so centered content
+   never shifts when the vertical scrollbar appears/disappears
+   between views. */
+html {
+  scrollbar-gutter: stable;
+}
