@@ -35,12 +35,16 @@ export const DaylettrPage = () => {
     const [previousView, setPreviousView] = useState("")
     const [collectedIds, setCollectedIds] = useState([])
     const [lastPostedAt, setLastPostedAt] = useState(null)
+    const [cooldownReason, setCooldownReason] = useState("posted")
 
     useEffect(() => {
         async function checkInitialStatus() {
             try {
                 const status = await cooldownStatus()
                 setLastPostedAt(status.lastPostedAt)
+                if (status.onCooldown) {
+                    setCooldownReason("existing")
+                }
                 setView(status.onCooldown ? "cooldown" : "landing")
             } catch {
                 setView("landing")
@@ -75,7 +79,10 @@ export const DaylettrPage = () => {
             setNote(data)
             setView("reading")
         } catch (err) {
-            if (err.response?.status === 400) setView("cooldown")
+            if (err.response?.status === 400) {
+                setCooldownReason("existing")
+                setView("cooldown")
+            }
         } finally {
             setLoading(false)
         }
@@ -84,6 +91,9 @@ export const DaylettrPage = () => {
     async function handleSubmit(text) {
         try {
             await postNote(text, note.id, rating)
+            // note was just posted — anchor the 6h countdown to now
+            setLastPostedAt(new Date().toISOString())
+            setCooldownReason("posted")
             setView("cooldown")
         } catch {
             setError("Failed to send your note.")
@@ -115,9 +125,19 @@ export const DaylettrPage = () => {
         setView("yesterday")
     }
 
+    // The header bookmark is visible on every view, including the
+    // collection page and the initial loading state — without these
+    // guards, previousView can be overwritten with "collection" or ""
+    // and the Back button would then navigate nowhere.
     function goToCollection() {
+        if (view === "collection") return
+        if (!view) return
         setPreviousView(view)
         setView("collection")
+    }
+
+    function backToPrevious() {
+        setView(previousView || "landing")
     }
 
     return (
@@ -127,19 +147,11 @@ export const DaylettrPage = () => {
                     <AnimatePresence mode="wait">
                         {view === "yesterday" ? (
                             <PageTransition key="yesterday">
-                                <YesterdayNotes
-                                    onBack={() => {
-                                        setView(previousView)
-                                    }}
-                                />
+                                <YesterdayNotes onBack={backToPrevious} />
                             </PageTransition>
                         ) : (
                             <PageTransition key="collection">
-                                <CollectionNotes
-                                    onBack={() => {
-                                        setView(previousView)
-                                    }}
-                                />
+                                <CollectionNotes onBack={backToPrevious} />
                             </PageTransition>
                         )}
                     </AnimatePresence>
@@ -206,7 +218,7 @@ export const DaylettrPage = () => {
 
                                 {view === "cooldown" && (
                                     <PageTransition key="cooldown">
-                                        <Cooldown onYesterday={goToYesterday} lastPostedAt={lastPostedAt}/>
+                                        <Cooldown onYesterday={goToYesterday} lastPostedAt={lastPostedAt} reason={cooldownReason}/>
                                     </PageTransition>
                                 )}
                             </main>
