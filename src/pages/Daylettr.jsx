@@ -8,6 +8,11 @@ import {
     postNote,
     cooldownStatus,
 } from "../api/messageService"
+import {
+    collectNote,
+    removeFromCollection,
+    isCollected,
+} from "../api/collectionService"
 import { useVisitor } from "../hooks/useVisitor"
 import { useTheme } from "../hooks/useTheme"
 import { useState, useEffect } from "react"
@@ -15,19 +20,20 @@ import { Cooldown } from "./Cooldown"
 import { RevealNote } from "./RevealNote"
 import { WriteNote } from "./WriteNote"
 import { YesterdayNotes } from "./YesterdayNotes"
+import { CollectionNotes } from "./CollectionNotes"
 import { AnimatePresence } from "framer-motion"
 import { PageTransition } from "../components/PageTransition"
 
 export const DaylettrPage = () => {
     const visitorId = useVisitor()
     const { isDark, toggleTheme } = useTheme()
-    const [view, setView] = useState("") // "" | "landing" | "reading" | "writing" | "cooldown" | "yesterday"
+    const [view, setView] = useState("") // "" | "landing" | "reading" | "writing" | "cooldown" | "yesterday" | "collection"
     const [note, setNote] = useState(null)
     const [rating, setRating] = useState(50)
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
     const [previousView, setPreviousView] = useState("")
-    const [collection, setCollection] = useState([])
+    const [collectedIds, setCollectedIds] = useState([])
     const [lastPostedAt, setLastPostedAt] = useState(null)
 
     useEffect(() => {
@@ -36,12 +42,31 @@ export const DaylettrPage = () => {
                 const status = await cooldownStatus()
                 setLastPostedAt(status.lastPostedAt)
                 setView(status.onCooldown ? "cooldown" : "landing")
-            } catch (err) {
+            } catch {
                 setView("landing")
             }
         }
         if (visitorId) checkInitialStatus()
     }, [visitorId])
+
+    useEffect(() => {
+        if (view === "reading" && note?.id) {
+            // Server is source of truth: sync bookmark state on entering
+            // the reading view (also covers back-navigation from the
+            // collection page, where removals happen locally there).
+            isCollected(note.id)
+                .then((collected) => {
+                    setCollectedIds((prev) => {
+                        const has = prev.includes(note.id)
+                        if (collected && !has) return [...prev, note.id]
+                        if (!collected && has)
+                            return prev.filter((id) => id !== note.id)
+                        return prev
+                    })
+                })
+                .catch((err) => console.error(err))
+        }
+    }, [view, note])
 
     async function handleReveal() {
         setLoading(true)
@@ -60,23 +85,29 @@ export const DaylettrPage = () => {
         try {
             await postNote(text, note.id, rating)
             setView("cooldown")
-        } catch (err) {
+        } catch {
             setError("Failed to send your note.")
         }
     }
 
-    function handleAddToCollection() {
-        // setCollection([...collection, note])
-        // localStorage.setItem("daylettr-favorites", collection)
-    }
-
-    function handleRemoveFromCollection() {
-        // setCollection(
-        //     collection.filter((c) => {
-        //         c.id != note.id
-        //     }),
-        // )
-        // localStorage.setItem("daylettr-favorites", collection)
+    async function toggleCollection(messageId) {
+        const wasCollected = collectedIds.includes(messageId)
+        setCollectedIds(
+            wasCollected
+                ? collectedIds.filter((id) => id !== messageId)
+                : [...collectedIds, messageId]
+        )
+        try {
+            if (wasCollected) {
+                await removeFromCollection(messageId)
+            } else {
+                await collectNote(messageId)
+            }
+        } catch (err) {
+            console.error(err)
+            // collectedIds (closure) is the pre-toggle state — restore it
+            setCollectedIds(collectedIds)
+        }
     }
 
     function goToYesterday() {
@@ -84,21 +115,36 @@ export const DaylettrPage = () => {
         setView("yesterday")
     }
 
+    function goToCollection() {
+        setPreviousView(view)
+        setView("collection")
+    }
+
     return (
         <div className="min-h-screen bg-white dark:bg-gray-950 text-black dark:text-white transition-colors duration-300">
-                {view === "yesterday" ? (
+                {view === "yesterday" || view === "collection" ? (
                     <AnimatePresence mode="wait">
-                        <PageTransition key="yesterday">
-                            <YesterdayNotes
-                                onBack={() => {
-                                    setView(previousView)
-                                }}
-                            />
-                        </PageTransition>
+                        {view === "yesterday" ? (
+                            <PageTransition key="yesterday">
+                                <YesterdayNotes
+                                    onBack={() => {
+                                        setView(previousView)
+                                    }}
+                                />
+                            </PageTransition>
+                        ) : (
+                            <PageTransition key="collection">
+                                <CollectionNotes
+                                    onBack={() => {
+                                        setView(previousView)
+                                    }}
+                                />
+                            </PageTransition>
+                        )}
                     </AnimatePresence>
                 ) : (
                     <>
-                        <Header />
+                        <Header onOpenCollection={goToCollection} />
                         <AnimatePresence mode="wait">
                             <main className="flex flex-col items-center px-4">
                                 {view === "" && (
@@ -124,12 +170,8 @@ export const DaylettrPage = () => {
                                             />
                                             <FeaturedNote
                                                 note={"test"}
-                                                onClickAdd={
-                                                    handleAddToCollection
-                                                }
-                                                onClickRemove={
-                                                    handleRemoveFromCollection
-                                                }
+                                                onClickAdd={() => {}}
+                                                onClickRemove={() => {}}
                                             />
                                         </div>
                                     </PageTransition>
@@ -143,6 +185,12 @@ export const DaylettrPage = () => {
                                             onToggleTheme={toggleTheme}
                                             onWrite={() => setView("writing")}
                                             onRate={setRating}
+                                            collected={collectedIds.includes(
+                                                note.id
+                                            )}
+                                            onToggleCollection={() =>
+                                                toggleCollection(note.id)
+                                            }
                                         />
                                     </PageTransition>
                                 )}

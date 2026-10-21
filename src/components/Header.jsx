@@ -1,8 +1,9 @@
-export const Header = () => {
+export const Header = ({ onOpenCollection }) => {
     return (
         <>
             <button
-                title="Add to collection"
+                onClick={onOpenCollection}
+                title="View collection"
                 className="fixed top-4 left-6 z-50 group flex items-center gap-2 text-xs font-medium text-zinc-400 hover:text-zinc-800 dark:text-zinc-500 dark:hover:text-zinc-200 transition-colors"
             >
                 <div className="p-2 bg-white dark:bg-zinc-800 rounded-full shadow-sm border border-zinc-100 dark:border-zinc-700 group-hover:border-zinc-300 dark:group-hover:border-zinc-600 transition-colors">

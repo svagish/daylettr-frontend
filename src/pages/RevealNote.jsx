@@ -9,11 +9,17 @@ export const RevealNote = ({
     onWrite,
     darkMode,
     onToggleTheme,
+    collected,
+    onToggleCollection,
 }) => {
     return (
         <div className="flex flex-col items-center w-full px-4 mx-auto">
             <RevealedNote note={note} />
-            <NoteActions onShare={() => {}} />
+            <NoteActions
+                onShare={() => {}}
+                collected={collected}
+                onToggleCollection={onToggleCollection}
+            />
             <MotivationSlider onRate={onRate} />{" "}
             <WriteNoteFooter
                 onWrite={onWrite}

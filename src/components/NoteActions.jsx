@@ -1,27 +1,27 @@
-export const NoteActions = ({ onShare }) => {
+import { Bookmark } from "lucide-react"
+
+export const NoteActions = ({ onShare, collected = false, onToggleCollection }) => {
     return (
         <div className="flex items-center gap-2 mt-4">
-            <button className="group relative p-2 rounded-full transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 bg-zinc-100 dark:bg-zinc-800">
+            <button
+                className="group relative p-2 rounded-full transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 bg-zinc-100 dark:bg-zinc-800"
+                aria-label={collected ? "Remove from collection" : "Add to collection"}
+                aria-pressed={collected}
+                title={collected ? "Remove from collection" : "Add to collection"}
+                onClick={onToggleCollection}
+            >
                 <div style={{ transform: "none" }}>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                    <Bookmark
+                        size={20}
+                        fill={collected ? "currentColor" : "none"}
                         className="transition-colors duration-300 text-zinc-400 group-hover:text-zinc-600 dark:text-zinc-500 dark:group-hover:text-zinc-300"
-                    >
-                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-                    </svg>
+                    />
                 </div>
             </button>
             <button
                 className="px-4 py-2 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all rounded-full text-xs font-bold flex items-center gap-2"
                 title="Share as image"
+                onClick={onShare}
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
