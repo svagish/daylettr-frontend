@@ -15,6 +15,7 @@ import {
 } from "../api/collectionService"
 import { useVisitor } from "../hooks/useVisitor"
 import { useTheme } from "../hooks/useTheme"
+import { useStreak } from "../hooks/useStreak"
 import { useState, useEffect } from "react"
 import { Cooldown } from "./Cooldown"
 import { RevealNote } from "./RevealNote"
@@ -27,6 +28,7 @@ import { PageTransition } from "../components/PageTransition"
 export const DaylettrPage = () => {
     const visitorId = useVisitor()
     const { isDark, toggleTheme } = useTheme()
+    const { streak, refresh: refreshStreak } = useStreak(visitorId)
     const [view, setView] = useState("") // "" | "landing" | "reading" | "writing" | "cooldown" | "yesterday" | "collection"
     const [note, setNote] = useState(null)
     const [rating, setRating] = useState(50)
@@ -95,6 +97,8 @@ export const DaylettrPage = () => {
             setLastPostedAt(new Date().toISOString())
             setCooldownReason("posted")
             setView("cooldown")
+            // a new note means a new streak day — refresh the badge/chip
+            refreshStreak()
         } catch {
             setError("Failed to send your note.")
         }
@@ -142,7 +146,7 @@ export const DaylettrPage = () => {
 
     return (
         <div className="min-h-screen bg-white dark:bg-gray-950 text-black dark:text-white transition-colors duration-300">
-            <Header onOpenCollection={goToCollection} />
+            <Header onOpenCollection={goToCollection} streak={streak} />
             {view === "yesterday" || view === "collection" ? (
                     <AnimatePresence mode="wait">
                         {view === "yesterday" ? (
@@ -218,7 +222,7 @@ export const DaylettrPage = () => {
 
                                 {view === "cooldown" && (
                                     <PageTransition key="cooldown">
-                                        <Cooldown onYesterday={goToYesterday} lastPostedAt={lastPostedAt} reason={cooldownReason}/>
+                                        <Cooldown onYesterday={goToYesterday} lastPostedAt={lastPostedAt} reason={cooldownReason} streak={streak?.currentStreak ?? 0}/>
                                     </PageTransition>
                                 )}
                             </main>
