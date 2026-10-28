@@ -18,7 +18,7 @@ function computeTimeLeft(lastPostedAt) {
 }
 
 function useCountdown(lastPostedAt) {
-    // initial value derived at mount — no effect, no "..." flash
+    // initial value derived at mount 
     const [timeLeft, setTimeLeft] = useState(() =>
         computeTimeLeft(lastPostedAt)
     )
@@ -48,7 +48,7 @@ export const Cooldown = ({ streak = 0, stats, onYesterday, lastPostedAt, reason 
             : "Come back to share another note."
 
     return (
-        <div className="mt-16 flex flex-col items-center gap-8 w-full max-w-xl">
+        <div className="mt-6 pb-8 flex flex-col items-center gap-6 w-full max-w-xl">
             <div className="text-center">
                 <h2 className="text-3xl font-serif text-gray-900 dark:text-white mb-3">
                     {heading}
@@ -63,7 +63,7 @@ export const Cooldown = ({ streak = 0, stats, onYesterday, lastPostedAt, reason 
                     <p className="text-xs text-gray-400 tracking-widest mb-1">
                         Message Streak
                     </p>
-                    <p className="text-4xl font-mono font-light text-gray-900 dark:text-white">
+                    <p className="text-3xl font-mono font-light text-gray-900 dark:text-white">
                         {streak}
                     </p>
                 </div>
@@ -71,9 +71,7 @@ export const Cooldown = ({ streak = 0, stats, onYesterday, lastPostedAt, reason 
                     <p className="text-xs text-gray-400 tracking-widest mb-1">
                         Next note in:
                     </p>
-                    {/* w-[8ch] = exact width of "00:00:00" in the mono font,
-                        so the placeholder never causes a layout shift */}
-                    <p className="text-4xl font-mono font-light text-gray-900 dark:text-white">
+                    <p className="text-3xl font-mono font-light text-gray-900 dark:text-white">
                         <span className="inline-block w-[8ch]">
                             {timeLeft || "..."}
                         </span>
@@ -82,8 +80,8 @@ export const Cooldown = ({ streak = 0, stats, onYesterday, lastPostedAt, reason 
             </div>
 
             <div className="grid grid-cols-2 gap-3 w-full">
-                <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-center">
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-center">
+                    <p className="text-xl font-bold text-gray-900 dark:text-white">
                         {stats?.positiveVibes ?? "67"}%
                     </p>
                     <p className="text-xs text-gray-400 tracking-widest uppercase mt-1">
@@ -91,8 +89,8 @@ export const Cooldown = ({ streak = 0, stats, onYesterday, lastPostedAt, reason 
                     </p>
                 </div>
 
-                <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-center">
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-center">
+                    <p className="text-xl font-bold text-gray-900 dark:text-white">
                         {stats?.turnedPositive ?? "100"}%
                     </p>
                     <p className="text-xs text-gray-400 tracking-widest uppercase mt-1">
@@ -100,8 +98,8 @@ export const Cooldown = ({ streak = 0, stats, onYesterday, lastPostedAt, reason 
                     </p>
                 </div>
 
-                <div className="col-span-2 border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-center">
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                <div className="col-span-2 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-center">
+                    <p className="text-xl font-bold text-gray-900 dark:text-white">
                         {stats?.wordsShared ?? "53"}
                     </p>
                     <p className="text-xs text-gray-400 tracking-widest uppercase mt-1">

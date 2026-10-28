@@ -4,8 +4,8 @@ export const FeaturedNote = ({ note, onClickAdd, onClickRemove }) => {
     if (!note) return null
     const [isCollectionClicked, setIsCollectionClicked] = useState(false)
     return (
-        <div className="mt-8 w-full max-w-md ">
-            <div className="bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-100 dark:border-yellow-900/30 rounded-2xl p-6 shadow-sm">
+        <div className="mt-4 w-full max-w-md ">
+            <div className="bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-100 dark:border-yellow-900/30 rounded-2xl p-4 shadow-sm">
                 <div className="flex items-center gap-2 mb-4">
                     <span>🏆</span>
                     <span className="text-xs font-semibold tracking-widest text-amber-700 uppercase">

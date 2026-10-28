@@ -52,7 +52,7 @@ export const CollectionNotes = ({ onBack }) => {
                         onClick={onBack}
                         className="text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition"
                     >
-                        ← Back
+                        ← Back to today
                     </button>
                     <h2 className="text-2xl font-serif italic text-gray-900 dark:text-white">
                         Your Collection
