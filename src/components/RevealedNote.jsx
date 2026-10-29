@@ -5,7 +5,7 @@ export const RevealedNote = ({ note }) => {
                 A note from the person before you...
             </p>
 
-            <h2 className="font-serif text-3xl md:text-4xl leading-tight text-zinc-800">
+            <h2 className="font-serif text-3xl md:text-4xl leading-tight text-zinc-800 dark:text-zinc-100">
                 {note.content}
             </h2>
         </div>

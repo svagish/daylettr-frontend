@@ -112,7 +112,7 @@ export const Cooldown = ({ streak = 0, stats, onYesterday, lastPostedAt, reason 
 
             <button
                 onClick={onYesterday}
-                className="border border-gray-300 text-black px-6 py-3 rounded-full font-semibold text-sm hover:bg-gray-50 transition"
+                className="border border-gray-300 dark:border-gray-600 text-black dark:text-zinc-100 px-6 py-3 rounded-full font-semibold text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition"
             >
                 See yesterday's notes
             </button>

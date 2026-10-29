@@ -47,9 +47,9 @@ export const Header = ({ onOpenCollection, streak }) => {
                             aria-label={`Streak: ${streak.currentStreak} day${streak.currentStreak === 1 ? "" : "s"}`}
                         >
                             <span className="p-2 bg-white dark:bg-zinc-800 rounded-full shadow-sm border border-zinc-100 dark:border-zinc-700 group-hover:border-zinc-300 dark:group-hover:border-zinc-600 transition-colors">
-                                🔥
+                                🔥{streak.currentStreak}
                             </span>
-                            <span>{streak.currentStreak}</span>
+                            {/* <span>{streak.currentStreak}</span> */}
                         </button>
 
                         {/* HOVER PANEL */}

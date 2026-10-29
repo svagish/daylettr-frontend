@@ -34,7 +34,7 @@ export const DaylettrPage = () => {
     const [rating, setRating] = useState(50)
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
-    const [previousView, setPreviousView] = useState("")
+    const [history, setHistory] = useState([]) // view stack for back navigation
     const [collectedIds, setCollectedIds] = useState([])
     const [lastPostedAt, setLastPostedAt] = useState(null)
     const [cooldownReason, setCooldownReason] = useState("posted")
@@ -124,24 +124,31 @@ export const DaylettrPage = () => {
         }
     }
 
-    function goToYesterday() {
-        setPreviousView(view)
-        setView("yesterday")
+    // pushView records the current view on the stack before navigating
+    // forward, so "Back" works at any depth (yesterday -> collection ->
+    // back -> back, etc.). Guards: the header bookmark is visible on
+    // every view, including the collection page and the initial loading
+    // state — without them, "" or "collection" would land on the stack
+    // and Back would navigate to a dead end.
+    function pushView(next) {
+        if (!view || next === view) return
+        setHistory((h) => [...h, view])
+        setView(next)
     }
 
-    // The header bookmark is visible on every view, including the
-    // collection page and the initial loading state — without these
-    // guards, previousView can be overwritten with "collection" or ""
-    // and the Back button would then navigate nowhere.
+    function goToYesterday() {
+        pushView("yesterday")
+    }
+
     function goToCollection() {
-        if (view === "collection") return
-        if (!view) return
-        setPreviousView(view)
-        setView("collection")
+        pushView("collection")
     }
 
     function backToPrevious() {
-        setView(previousView || "landing")
+        const prev = history[history.length - 1]
+        if (!prev) return
+        setHistory((h) => h.slice(0, -1))
+        setView(prev)
     }
 
     return (

@@ -21,13 +21,13 @@ export const WriteNote = ({ onSubmit, error }) => {
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 placeholder="Leave a thought for the person after you..."
-                maxLength={300}
+                maxLength={500}
                 className="font-serif text-2xl p-4 bg-transparent dark:bg-transparent border-b-2 border-zinc-300 dark:border-zinc-700 focus:outline-none focus:border-zinc-800 dark:focus:border-zinc-400 transition-colors resize-none w-full h-48"
             />
 
             <div className="w-full max-w-md text-right mt-1">
                 <span className="text-xs text-gray-400">
-                    {text.length} / 300
+                    {text.length} / 500
                 </span>
             </div>
 
