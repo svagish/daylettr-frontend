@@ -35,7 +35,7 @@ function useCountdown(lastPostedAt) {
     return timeLeft
 }
 
-export const Cooldown = ({ streak = 0, stats, onYesterday, lastPostedAt, reason = "existing" }) => {
+export const Cooldown = ({ streak = 0, stats, wordsShared, onYesterday, lastPostedAt, reason = "existing" }) => {
     const timeLeft = useCountdown(lastPostedAt)
 
     const heading =
@@ -100,7 +100,7 @@ export const Cooldown = ({ streak = 0, stats, onYesterday, lastPostedAt, reason 
 
                 <div className="col-span-2 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-center">
                     <p className="text-xl font-bold text-gray-900 dark:text-white">
-                        {stats?.wordsShared ?? "53"}
+                        {wordsShared ?? "…"}
                     </p>
                     <p className="text-xs text-gray-400 tracking-widest uppercase mt-1">
                         Words Shared by the Community Today

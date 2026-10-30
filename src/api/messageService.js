@@ -24,3 +24,8 @@ export const cooldownStatus = async () => {
   const response = await api.get("/visitor/status");
   return response.data;
 };
+
+export const getWordsToday = async () => {
+  const response = await api.get("/message/words-today");
+  return response.data;
+};

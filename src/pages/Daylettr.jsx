@@ -16,6 +16,7 @@ import {
 import { useVisitor } from "../hooks/useVisitor"
 import { useTheme } from "../hooks/useTheme"
 import { useStreak } from "../hooks/useStreak"
+import { useWordsToday } from "../hooks/useWordsToday"
 import { useState, useEffect } from "react"
 import { Cooldown } from "./Cooldown"
 import { RevealNote } from "./RevealNote"
@@ -29,6 +30,7 @@ export const DaylettrPage = () => {
     const visitorId = useVisitor()
     const { isDark, toggleTheme } = useTheme()
     const { streak, refresh: refreshStreak } = useStreak(visitorId)
+    const { wordsToday, refresh: refreshWordsToday } = useWordsToday()
     const [view, setView] = useState("") // "" | "landing" | "reading" | "writing" | "cooldown" | "yesterday" | "collection"
     const [note, setNote] = useState(null)
     const [rating, setRating] = useState(50)
@@ -99,6 +101,8 @@ export const DaylettrPage = () => {
             setView("cooldown")
             // a new note means a new streak day — refresh the badge/chip
             refreshStreak()
+            // your words just landed in today's community count
+            refreshWordsToday()
         } catch {
             setError("Failed to send your note.")
         }
@@ -229,7 +233,7 @@ export const DaylettrPage = () => {
 
                                 {view === "cooldown" && (
                                     <PageTransition key="cooldown">
-                                        <Cooldown onYesterday={goToYesterday} lastPostedAt={lastPostedAt} reason={cooldownReason} streak={streak?.currentStreak ?? 0}/>
+                                        <Cooldown onYesterday={goToYesterday} lastPostedAt={lastPostedAt} reason={cooldownReason} streak={streak?.currentStreak ?? 0} wordsShared={wordsToday}/>
                                     </PageTransition>
                                 )}
                             </main>
